@@ -6,7 +6,6 @@ import requests
 import csv
 import datetime
 
-print('running..')
 # sample text to find
 #  <span id="kindle-price" class="a-size-medium a-color-price"> $14.99 </span>  
 
@@ -26,7 +25,6 @@ def amazon_kindle_price_scraper(url):
             price = element.contents
         # print(f"id   : {element.get('id')}")
         # print(f"class: {element.get('class')}")
-    print('running...')
     try:
         price = price[0]
         price = price.strip()
@@ -37,19 +35,25 @@ def amazon_kindle_price_scraper(url):
 
 def update_price_csv(urls):
     """updates prices for the csv"""
-    with open('daily_price_data.csv') as prices_file:
-        file_reader = csv.reader(prices_file)
-        count = 0
-        for row in list(file_reader):
-            if row == [[]]:
-                break
-            count += 1
-
     with open('daily_price_data.csv', 'a', newline='') as prices_file:
         file_writer = csv.writer(prices_file)
         current_date = str(datetime.date.today())
         file_writer.writerow([current_date] + url_helper(urls))
 
+
+def check_for_price_difference():
+    """checks whether current price is different to previous price"""
+    change = False
+    text = ''
+    with open('daily_price_data.csv') as prices_file:
+        file_reader = csv.reader(prices_file)
+        file_reader_list = list(file_reader)
+        for index, price in enumerate(file_reader_list[-1]):
+            if index != 0 and len(file_reader_list[-2]) > index:
+                if price != file_reader_list[-2][index]:
+                    change = True
+                    text += f'{file_reader_list[0][index]} is on sale for {price}\n'
+    return change, text
 
 def url_helper(urls):
     return [amazon_kindle_price_scraper(i) for i in urls]
@@ -57,12 +61,11 @@ def url_helper(urls):
 url1 = 'https://www.amazon.com.au/Gardens-Moon-Malazan-Book-Fallen-ebook/dp/B0031RS64G/ref=sr_1_3?crid=1R4P3V5X90EJS&keywords=gardens+of+the+moon&qid=1640488583& \
     s=digital-text&sprefix=%2Cdigital-text%2C591&sr=1-3'
 url2 = 'https://www.amazon.com.au/Deadhouse-Gates-Malazan-Book-Fallen-ebook/dp/B0031RS6PU'
-url3 = 'https://www.amazon.com.au/Wintersteel-Cradle-Book-Will-Wight-ebook/dp/B08JMF22F2'
+url3 = 'https://www.amazon.com.au/Dune-Messiah-Second-Novel-Sequence-ebook/dp/B00590YMHI'
 
-urls = [url1, url2]
+urls = [url1, url2, url3]
 
 if __name__ == '__main__':
-    # print(amazon_kindle_price_scraper(url1))
-    # print(amazon_kindle_price_scraper(url2))
-    # print(amazon_kindle_price_scraper(url3))
     update_price_csv(urls)
+    #print(check_for_price_difference()[1])
+    
