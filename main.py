@@ -31,6 +31,7 @@ def amazon_kindle_price_scraper(url):
         return price
     except UnboundLocalError:
         print('A valid price was not found, perhaps the website given is incorrect.')
+        return 'N/A'
 
 
 def update_price_csv(csv_location, urls):
@@ -68,6 +69,5 @@ with open(urls_location) as urls:
     url_list = urls.readlines()
 
 if __name__ == '__main__':
-    # update_price_csv(csv_location, url_list)
+    update_price_csv(csv_location, url_list)
     # print(check_for_price_difference(csv_location)[1])
-    print(url_list)
