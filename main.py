@@ -7,7 +7,7 @@ import csv
 import datetime
 
 # sample text to find
-#  <span id="kindle-price" class="a-size-medium a-color-price"> $14.99 </span>  
+# <span id="kindle-price" class="a-size-medium a-color-price"> $14.99 </span>  
 
 
 def amazon_kindle_price_scraper(url):
@@ -56,10 +56,10 @@ def check_for_price_difference(csv_location):
                     text += f'{file_reader_list[0][index]} is on sale for {price}\n'
     return change, text
 
-def url_helper(urls):
-    """Returns prices list for a list of given urls"""
-    return [amazon_kindle_price_scraper(i) for i in urls]
 
+def url_helper(urls):
+    """Returns prices list for a list of given urls using list comprehension"""
+    return [amazon_kindle_price_scraper(i) for i in urls]
 
 
 urls_location = r'C:\Users\o_dav\Dropbox\Hobby\amazon_webscrape\kindle-price-config-files\urls_file.txt'
