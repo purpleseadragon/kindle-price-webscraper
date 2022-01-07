@@ -1,6 +1,5 @@
 '''main file for scraping amazon
--> writes price of book given to a csv file and compares to a previous value
-emails if different to previous'''
+-> writes price of book given to a csv file and compares to a previous value'''
 import bs4
 import requests
 import csv
@@ -54,6 +53,9 @@ def check_for_price_difference(csv_location):
                 if price != file_reader_list[-2][index]:
                     change = True
                     text += f'{file_reader_list[0][index]} is on sale for {price}\n'
+    if not change:
+        text = 'There is no price change'
+        return change, text
     return change, text
 
 
@@ -70,4 +72,4 @@ with open(urls_location) as urls:
 
 if __name__ == '__main__':
     update_price_csv(csv_location, url_list)
-    # print(check_for_price_difference(csv_location)[1])
+    print(check_for_price_difference(csv_location)[1])
