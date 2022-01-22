@@ -4,7 +4,7 @@ import bs4
 import requests
 import csv
 import datetime
-
+import ezgmail
 # sample text to find
 # <span id="kindle-price" class="a-size-medium a-color-price"> $14.99 </span>  
 
@@ -64,6 +64,10 @@ def url_helper(urls):
     return [amazon_kindle_price_scraper(i) for i in urls]
 
 
+def email_sender(text):
+    """Sends an email to ..."""
+    ezgmail.send('oscardavine@gmail.com', 'Book sale (Not spam)', text)
+
 urls_location = r'C:\Users\o_dav\Dropbox\Hobby\amazon_webscrape\kindle-price-config-files\urls_file.txt'
 csv_location = r'C:\Users\o_dav\Dropbox\Hobby\amazon_webscrape\kindle-price-config-files\daily_price_data.csv'
 
@@ -72,4 +76,9 @@ with open(urls_location) as urls:
 
 if __name__ == '__main__':
     update_price_csv(csv_location, url_list)
-    print(check_for_price_difference(csv_location)[1])
+    change, text = check_for_price_difference(csv_location)
+    if change:
+        email_sender(text)
+    exit()
+    
+
